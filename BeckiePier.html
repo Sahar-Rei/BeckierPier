@@ -1,0 +1,802 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>BeckiePier</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+SC:wght@500;700&family=UnifrakturCook:wght@700&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          oak: { DEFAULT: '#4a2e1b', dark: '#2b1810', bog: '#1a0f0a' },
+          parch: '#e8d8b0',
+          bronze: '#c5a059',
+          candle: '#ffaa33',
+          steel: '#708090'
+        }
+      }
+    }
+  };
+</script>
+<style>
+  /* Layout: a half-timbered street at dusk. A rain-lashed hero (Excalibur in its stone between two
+     timber houses), then wooden signs and framed cards laid on a cobblestone street, a timber-framed
+     statute wall, and a torch-lit footer. One deliberate bold moment: the sword's slow pulse. */
+  :root {
+    --oak-dark: #2b1810;
+    --oak: #4a2e1b;
+    --bog: #1a0f0a;
+    --ink: #0d0705;
+    --parch: #e8d8b0;
+    --bronze: #c5a059;
+    --candle: #ffaa33;
+    --steel: #708090;
+    --steel-lt: #a9b6c2;
+    --ground: #26221f;
+    --f-display: 'UnifrakturCook', 'Old English Text MT', Georgia, serif;
+    --f-body: 'Alegreya', Georgia, 'Times New Roman', serif;
+    --f-caps: 'Alegreya SC', Georgia, 'Times New Roman', serif;
+    color-scheme: dark;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; background: var(--ground); }
+  html, body { overflow-x: clip; }
+  body {
+    background-color: var(--ground);
+    background-image: var(--cobble, none);
+    background-size: 520px 520px;
+    color: var(--parch);
+    font-family: var(--f-body);
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* dusk vignette over the cobblestones */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(26,15,10,.1), rgba(10,6,4,.72) 100%),
+      linear-gradient(rgba(26,15,10,.4), rgba(26,15,10,.4));
+  }
+  #root { position: relative; z-index: 1; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--candle); outline-offset: 3px; }
+
+  .g {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    background: linear-gradient(180deg, #34200f, #1f120b);
+    border-bottom: 3px solid var(--ink);
+    box-shadow: 0 1px 0 rgba(197,160,89,.35), 0 10px 22px rgba(0,0,0,.55);
+  }
+  .nav-in { max-width: 1160px; margin: 0 auto; display: flex; align-items: center; gap: 26px; height: 56px; }
+  .nav-logo { font-family: var(--f-display); font-size: 1.9rem; text-decoration: none; color: var(--parch); line-height: 1; text-shadow: 0 0 14px rgba(255,170,51,.3); }
+  .nav-links { gap: 22px; font-family: var(--f-caps); letter-spacing: .12em; font-size: .95rem; }
+  .nav-links a { text-decoration: none; color: var(--bronze); padding: 4px 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+  .nav-links a:hover { color: var(--parch); border-bottom-color: var(--bronze); }
+  .chest-btn {
+    font-family: var(--f-caps); letter-spacing: .1em; font-size: .95rem; color: var(--parch);
+    background: rgba(26,15,10,.7); border: 1px solid rgba(197,160,89,.55); border-radius: 3px;
+    padding: 6px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    transition: box-shadow .25s, border-color .25s;
+  }
+  .chest-btn:hover { border-color: var(--bronze); box-shadow: 0 0 14px rgba(255,170,51,.35); }
+  .count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px; background: var(--bronze); color: var(--bog); font-weight: 700; font-size: .85rem; }
+  .chest-panel {
+    position: absolute; top: calc(100% + 8px); right: max(16px, env(safe-area-inset-right, 0px));
+    width: min(360px, calc(100vw - 32px)); padding: 18px 18px 14px;
+    background: linear-gradient(180deg, #3a2314, #24140c);
+    border: 2px solid var(--ink); border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(197,160,89,.4), 0 18px 34px rgba(0,0,0,.65);
+  }
+  .chest-panel h2 { font-family: var(--f-caps); letter-spacing: .12em; color: var(--bronze); font-size: 1rem; margin: 0 0 10px; }
+  .chest-panel ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .chest-panel li { display: flex; align-items: baseline; gap: 10px; border-bottom: 1px dashed rgba(197,160,89,.3); padding-bottom: 6px; }
+  .chest-panel li span:first-child { flex: 1; min-width: 0; }
+  .chest-panel .rm { background: none; border: 0; color: var(--steel-lt); cursor: pointer; font: inherit; text-decoration: underline; padding: 0 2px; }
+  .chest-panel .total { display: flex; justify-content: space-between; margin-top: 12px; font-family: var(--f-caps); letter-spacing: .08em; color: var(--bronze); font-size: 1.1rem; }
+  .chest-panel .note { margin: 8px 0 0; font-size: .9rem; color: rgba(232,216,176,.7); font-style: italic; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; overflow: hidden; isolation: isolate; background: #17181a; }
+  .clouds { position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #0e0f11 0%, #212428 42%, #34312e 78%, #3a3430 100%); overflow: hidden; }
+  .cloud { position: absolute; left: -25%; width: 150%; filter: blur(18px); will-change: transform; animation: drift var(--dur, 48s) ease-in-out infinite alternate; }
+  .cloud.c1 { top: -10%; height: 56%; --dur: 46s;
+    background:
+      radial-gradient(ellipse 22% 55% at 10% 45%, rgba(74,78,84,.95), transparent 70%),
+      radial-gradient(ellipse 26% 60% at 34% 35%, rgba(52,55,60,.98), transparent 70%),
+      radial-gradient(ellipse 24% 55% at 60% 50%, rgba(68,72,78,.92), transparent 70%),
+      radial-gradient(ellipse 22% 58% at 88% 40%, rgba(46,49,54,.98), transparent 70%); }
+  .cloud.c2 { top: 12%; height: 46%; --dur: 64s; animation-direction: alternate-reverse;
+    background:
+      radial-gradient(ellipse 20% 55% at 18% 50%, rgba(40,43,48,.95), transparent 70%),
+      radial-gradient(ellipse 24% 60% at 46% 42%, rgba(58,61,67,.9), transparent 70%),
+      radial-gradient(ellipse 22% 55% at 74% 52%, rgba(38,41,46,.95), transparent 70%); }
+  .cloud.c3 { top: 34%; height: 38%; --dur: 80s; opacity: .8;
+    background:
+      radial-gradient(ellipse 24% 50% at 22% 50%, rgba(92,84,76,.55), transparent 70%),
+      radial-gradient(ellipse 26% 55% at 58% 45%, rgba(84,78,72,.5), transparent 70%),
+      radial-gradient(ellipse 20% 50% at 90% 55%, rgba(96,86,76,.5), transparent 70%); }
+  @keyframes drift { from { transform: translate3d(-6%, 0, 0); } to { transform: translate3d(6%, 14px, 0); } }
+
+  .house { position: absolute; bottom: 24px; z-index: 1; opacity: .97; pointer-events: none; }
+  .house svg { display: block; width: 100%; height: auto; }
+  .house-l { left: -2%; width: clamp(150px, 24vw, 280px); }
+  .house-r { right: -3%; width: clamp(130px, 19vw, 220px); transform: scaleX(-1); }
+  .win { animation: winflick 3.8s ease-in-out infinite; }
+  .win.w2 { animation-delay: -1.3s; }
+  .win.w3 { animation-delay: -2.4s; }
+  @keyframes winflick { 0%, 100% { opacity: .78; } 30% { opacity: 1; } 55% { opacity: .86; } 78% { opacity: .97; } }
+
+  .rain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+
+  .hero-inner { position: relative; z-index: 2; text-align: center; padding-top: 34px; padding-bottom: 58px; }
+  .logo {
+    margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(3.8rem, 13.5vw, 8.6rem); line-height: .98;
+    color: var(--parch); letter-spacing: .01em;
+    text-shadow: 0 3px 0 #1a0f0a, 0 0 26px rgba(255,170,51,.34), 0 0 3px rgba(0,0,0,.9);
+  }
+  .tag { margin: 10px 0 0; font-family: var(--f-caps); font-weight: 500; letter-spacing: .2em; font-size: clamp(.85rem, 2.7vw, 1.2rem); color: var(--bronze); text-shadow: 0 1px 6px rgba(0,0,0,.8); }
+  .sub { margin: 6px auto 0; max-width: 34ch; font-style: italic; color: rgba(232,216,176,.82); text-shadow: 0 1px 8px rgba(0,0,0,.9); text-wrap: balance; }
+  .scene { position: relative; width: min(580px, 100%); margin: 6px auto 0; }
+  .scene svg { display: block; width: 100%; height: auto; }
+  .cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 8px; }
+  .hero-beam {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26px; z-index: 3;
+    background:
+      radial-gradient(circle at 50% 50%, #e8c98a 0 2px, #6b4e1f 3px, transparent 4.5px) 0 50% / 96px 100% repeat-x,
+      repeating-linear-gradient(90deg, rgba(0,0,0,0) 0 9px, rgba(0,0,0,.16) 9px 10px, rgba(255,200,140,.04) 10px 16px),
+      linear-gradient(180deg, #5b3a22, #3a2314 60%, #2b1810);
+    border-top: 3px solid var(--ink);
+    box-shadow: 0 -12px 22px rgba(0,0,0,.5);
+  }
+
+  /* the sword and its stone */
+  .sword { animation: swordPulse 6s ease-in-out infinite; }
+  .aura { animation: aura 6s ease-in-out infinite; transform-origin: 300px 260px; }
+  .shimmer { animation: shimmer 6s ease-in-out infinite; }
+  .runes { animation: runeGlow 6s ease-in-out infinite; }
+  @keyframes swordPulse { 0%, 100% { filter: drop-shadow(0 0 2px rgba(255,200,120,.12)); } 46%, 54% { filter: drop-shadow(0 0 14px rgba(255,190,100,.8)); } }
+  @keyframes aura { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+  @keyframes shimmer {
+    0% { transform: translateY(290px); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translateY(0); opacity: 1; }
+    62% { transform: translateY(-14px); opacity: 0; }
+    100% { transform: translateY(-14px); opacity: 0; }
+  }
+  @keyframes runeGlow { 0%, 100% { stroke: #2b3138; } 50% { stroke: #ffc566; } }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    font-family: var(--f-caps); font-weight: 700; letter-spacing: .08em; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    color: var(--bog); cursor: pointer;
+    background: linear-gradient(180deg, #e6c985, #c5a059 52%, #9c7a3a);
+    border: 2px solid var(--oak-dark); border-radius: 3px; padding: 10px 20px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 2px 0 var(--ink), 0 0 0 1px rgba(197,160,89,.4);
+    transition: filter .2s, box-shadow .25s, transform .1s;
+  }
+  .btn:hover { filter: brightness(1.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 0 var(--ink), 0 0 20px rgba(255,170,51,.55); }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { background: rgba(26,15,10,.55); color: var(--parch); border-color: rgba(197,160,89,.6); box-shadow: inset 0 0 0 1px rgba(26,15,10,.8); }
+  .btn.ghost:hover { box-shadow: 0 0 16px rgba(255,170,51,.35); filter: none; }
+  .btn[aria-pressed="true"] { background: rgba(26,15,10,.6); color: var(--bronze); border-color: var(--bronze); box-shadow: inset 0 0 0 1px rgba(26,15,10,.9); }
+
+  /* ---------- plaque / headings ---------- */
+  .plaque {
+    position: relative; margin: 0 auto; max-width: 780px; text-align: center; border-radius: 4px;
+    padding: 30px clamp(22px, 5vw, 54px);
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,0) 0 7px, rgba(0,0,0,.13) 7px 8px, rgba(255,200,140,.035) 8px 13px),
+      linear-gradient(180deg, #5b3a22, #3a2314 55%, #2b1810);
+    box-shadow: inset 0 1px 0 rgba(255,214,160,.25), inset 0 0 0 3px var(--bog), inset 0 0 0 4px rgba(197,160,89,.35), 0 16px 30px rgba(0,0,0,.6);
+  }
+  .plaque::before {
+    content: ''; position: absolute; inset: 11px; pointer-events: none;
+    background:
+      radial-gradient(circle, #e8c98a 0 2px, #6b4e1f 3px, transparent 4.5px) 0 0 / 11px 11px no-repeat,
+      radial-gradient(circle, #e8c98a 0 2px, #6b4e1f 3px, transparent 4.5px) 100% 0 / 11px 11px no-repeat,
+      radial-gradient(circle, #e8c98a 0 2px, #6b4e1f 3px, transparent 4.5px) 0 100% / 11px 11px no-repeat,
+      radial-gradient(circle, #e8c98a 0 2px, #6b4e1f 3px, transparent 4.5px) 100% 100% / 11px 11px no-repeat;
+  }
+  .sec-title { margin: 0; font-family: var(--f-caps); font-weight: 700; letter-spacing: .08em; font-size: clamp(1.9rem, 5vw, 2.7rem); line-height: 1.1; color: var(--parch); text-wrap: balance; text-shadow: 0 2px 0 rgba(0,0,0,.6); }
+  .sec-sub { margin: 10px auto 0; max-width: 52ch; font-style: italic; color: rgba(232,216,176,.86); text-wrap: balance; }
+
+  /* ---------- build-up reveal ---------- */
+  .rv { position: relative; }
+  .rv-hidden { opacity: 0; transform: translateY(-48px) scale(1.03); }
+  .rv-build { animation: settle .95s cubic-bezier(.2,.9,.25,1) both; }
+  @keyframes settle {
+    0% { opacity: 0; transform: translateY(-48px) rotate(-.6deg) scale(1.03); }
+    42% { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+    52% { transform: translateY(6px) scaleY(.992); }
+    64% { transform: translate(-3px, -2px); }
+    74% { transform: translate(3px, 1px); }
+    86% { transform: translate(-1.5px, 0); }
+    100% { opacity: 1; transform: none; }
+  }
+  .smoke { position: absolute; left: 0; right: 0; bottom: 0; height: 0; pointer-events: none; z-index: 8; }
+  .puff {
+    position: absolute; bottom: -14px; left: var(--x); width: var(--s); height: var(--s); margin-left: calc(var(--s) / -2);
+    border-radius: 50%; opacity: 0; filter: blur(7px);
+    background: radial-gradient(circle at 40% 40%, rgba(196,193,188,.6), rgba(128,125,120,.3) 55%, transparent 72%);
+    animation: puff 1.8s ease-out forwards;
+  }
+  @keyframes puff {
+    0% { opacity: 0; transform: translate(0, 10px) scale(.3); }
+    24% { opacity: .9; }
+    100% { opacity: 0; transform: translate(var(--dx), -74px) scale(1.7); }
+  }
+
+  /* ---------- artifact cards ---------- */
+  .frame {
+    position: relative; height: 100%; padding: 12px; border-radius: 5px;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,0) 0 5px, rgba(0,0,0,.14) 5px 6px, rgba(255,200,140,.04) 6px 9px),
+      linear-gradient(145deg, #5b3a22, #3a2314 45%, #4a2e1b 70%, #2b1810);
+    box-shadow: inset 0 1px 0 rgba(255,214,160,.18), inset 0 -2px 4px rgba(0,0,0,.6), 0 12px 26px rgba(0,0,0,.55);
+    transition: transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s;
+  }
+  .frame:hover, .frame:focus-within {
+    transform: translateY(-8px);
+    box-shadow: inset 0 1px 0 rgba(255,214,160,.32), inset 0 0 0 1px rgba(255,170,51,.55), 0 0 0 1px rgba(197,160,89,.6), 0 0 36px 4px rgba(255,170,51,.4), 0 22px 34px rgba(0,0,0,.6);
+  }
+  .frame .inner {
+    position: relative; height: 100%; display: flex; flex-direction: column; background: var(--bog);
+    box-shadow: 0 0 0 2px #0d0705, 0 0 0 3px rgba(197,160,89,.3);
+  }
+  .corner { position: absolute; width: 30px; height: 30px; z-index: 3; pointer-events: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.7)); }
+  .corner svg { display: block; width: 100%; height: 100%; }
+  .corner.tl { top: -2px; left: -2px; }
+  .corner.tr { top: -2px; right: -2px; transform: scaleX(-1); }
+  .corner.bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+  .corner.br { bottom: -2px; right: -2px; transform: scale(-1, -1); }
+  .plate {
+    position: relative; aspect-ratio: 5 / 4; display: grid; place-items: center; border-bottom: 2px solid #0d0705;
+    background:
+      radial-gradient(circle at 50% 44%, rgba(255,170,51,.24), transparent 62%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.016) 0 2px, transparent 2px 5px),
+      #130b07;
+  }
+  .plate .icon { width: 56%; max-width: 190px; transition: transform .4s cubic-bezier(.2,.8,.3,1); }
+  .frame:hover .plate .icon { transform: scale(1.06) rotate(-1.5deg); }
+  .icon svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(0,0,0,.65)); }
+  .lot { position: absolute; left: 14px; top: 10px; font-family: var(--f-caps); letter-spacing: .14em; font-size: .85rem; color: var(--bronze); }
+  .body { flex: 1; display: flex; flex-direction: column; padding: 16px 18px 18px; min-width: 0; }
+  .body h3 { margin: 0; font-family: var(--f-caps); font-weight: 700; letter-spacing: .05em; font-size: 1.4rem; line-height: 1.15; color: var(--parch); text-wrap: balance; }
+  .body .en { margin: 3px 0 0; font-style: italic; color: var(--steel-lt); }
+  .body .prov { margin: 6px 0 0; font-family: var(--f-caps); letter-spacing: .1em; font-size: .8rem; color: var(--bronze); }
+  .body .desc { margin: 12px 0 0; color: rgba(232,216,176,.86); }
+  .buy { margin-top: auto; padding-top: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .price { display: inline-flex; align-items: center; gap: 7px; font-family: var(--f-caps); font-weight: 700; font-size: 1.55rem; color: var(--bronze); font-variant-numeric: oldstyle-nums; white-space: nowrap; }
+  .price abbr { text-decoration: none; font-size: .9rem; letter-spacing: .1em; color: rgba(197,160,89,.85); }
+  .coin { width: 20px; height: 20px; }
+
+  .icon .swing { animation: swing 4.5s ease-in-out infinite; }
+  .icon .roll { animation: roll 5s ease-in-out infinite; }
+  .icon .halo { animation: halo 5s ease-in-out infinite; transform-origin: 60px 72px; }
+  .icon .script { stroke-dasharray: 100; animation: write 6s ease-in-out infinite; }
+  .icon .twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+  @keyframes swing { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+  @keyframes roll { 0%, 100% { transform: translate(-4px, .5px); } 50% { transform: translate(4px, -.5px); } }
+  @keyframes halo { 0%, 100% { opacity: .6; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.05); } }
+  @keyframes write { 0% { stroke-dashoffset: 100; opacity: 1; } 55% { stroke-dashoffset: 0; opacity: 1; } 85% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  @keyframes twinkle { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+  /* ---------- statute wall (timber frame) ---------- */
+  .wall {
+    position: relative; padding: clamp(36px, 5vw, 60px) clamp(30px, 5vw, 60px);
+    background:
+      radial-gradient(rgba(232,216,176,.04) 1px, transparent 1.6px) 0 0 / 8px 8px,
+      linear-gradient(180deg, #2a1710, #1f120b);
+    box-shadow: inset 0 0 0 12px var(--oak), inset 0 0 0 14px var(--bog), inset 0 0 0 15px rgba(197,160,89,.28), 0 22px 44px rgba(0,0,0,.6);
+  }
+  .wall::before, .wall::after { content: ''; position: absolute; top: 14px; width: 96px; height: 96px; pointer-events: none; }
+  .wall::before { left: 14px; background: linear-gradient(135deg, transparent 0 41%, var(--oak) 41% 59%, transparent 59%); }
+  .wall::after { right: 14px; background: linear-gradient(225deg, transparent 0 41%, var(--oak) 41% 59%, transparent 59%); }
+  .statute h3 { margin: 12px 0 6px; font-family: var(--f-caps); letter-spacing: .1em; font-size: 1.25rem; color: var(--bronze); }
+  .statute p { margin: 0; color: rgba(232,216,176,.88); }
+  .statute .glyph { width: 40px; height: 40px; }
+  .statute .glyph svg { display: block; width: 100%; height: 100%; }
+  .statute > div { border-top: 3px solid var(--oak); padding-top: 16px; }
+
+  /* ---------- footer ---------- */
+  .foot { position: relative; margin-top: 90px; background: linear-gradient(180deg, #24140c, #120a06); border-top: 3px solid var(--ink); box-shadow: 0 -1px 0 rgba(197,160,89,.4), 0 -16px 30px rgba(0,0,0,.5); }
+  .foot-in { display: flex; align-items: flex-start; justify-content: center; gap: clamp(18px, 6vw, 70px); padding-top: 34px; padding-bottom: max(40px, env(safe-area-inset-bottom, 0px)); text-align: center; }
+  .foot-name { font-family: var(--f-display); font-size: 2.6rem; line-height: 1; margin: 0; color: var(--parch); text-shadow: 0 0 18px rgba(255,170,51,.3); }
+  .foot-lines { margin: 10px 0 0; color: rgba(232,216,176,.8); }
+  .foot-lines span { display: block; }
+  .foot small { display: block; margin-top: 14px; color: rgba(169,182,194,.75); letter-spacing: .04em; }
+  .torch { position: relative; flex: none; width: 27px; height: 130px; margin-top: 6px; }
+  .torch-stick { position: absolute; left: 10px; top: 36px; width: 7px; height: 94px; border-radius: 2px; background: linear-gradient(90deg, #2b1810, #5b3a22, #2b1810); }
+  .torch-cup { position: absolute; left: 5px; top: 30px; width: 17px; height: 12px; background: linear-gradient(180deg, #e2c37f, #7a5a26); clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%); }
+  .flame { position: absolute; left: 3px; top: 0; width: 21px; height: 36px; border-radius: 50% 50% 45% 45% / 62% 62% 38% 38%; transform-origin: 50% 100%;
+    background: radial-gradient(ellipse at 50% 76%, #fff3c4 0 18%, #ffaa33 46%, rgba(255,120,20,0) 78%); animation: flicker 1.3s ease-in-out infinite; }
+  .torch.t2 .flame { animation-delay: -.6s; }
+  .torch-glow { position: absolute; left: -62px; top: -44px; width: 150px; height: 150px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(255,170,51,.28), transparent 65%); animation: glow 2.4s ease-in-out infinite; }
+  @keyframes flicker { 0%, 100% { transform: scale(1, 1) rotate(-1deg); } 25% { transform: scale(.92, 1.08) rotate(2deg); } 50% { transform: scale(1.05, .94) rotate(-2deg); } 75% { transform: scale(.96, 1.04) rotate(1deg); } }
+  @keyframes glow { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+
+  @media (max-width: 560px) {
+    body { font-size: 17px; }
+    .house-l { left: -62px; }
+    .house-r { right: -52px; }
+    .torch-glow { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+(function () {
+  'use strict';
+  var React = window.React, ReactDOM = window.ReactDOM;
+  var useState = React.useState, useEffect = React.useEffect, useRef = React.useRef,
+      useMemo = React.useMemo, useLayoutEffect = React.useLayoutEffect;
+  var html = window.htm.bind(React.createElement);
+
+  /* ====================================================================
+     1. Procedural cobblestone: a seamless SVG tile, generated once and
+        handed to CSS through the --cobble variable.
+     ==================================================================== */
+  function makeCobble() {
+    var W = 520, H = 520, seed = 20261015;
+    function rnd() { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+    var fills = ['#6d6f70', '#5c5e5f', '#7a7b78', '#575451', '#64594f', '#6b5b4a', '#51463b', '#4a4540', '#76716a', '#625d57'];
+    var out = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">';
+    out += '<rect width="' + W + '" height="' + H + '" fill="#15100c"/>';
+    var y = 0;
+    while (y < H) {
+      var h = Math.min(H - y, 80 + rnd() * 28);
+      if (H - y - h < 64) h = H - y;
+      var widths = [], sum = 0;
+      while (sum < W) { var w = 78 + rnd() * 76; if (W - sum - w < 70) w = W - sum; widths.push(w); sum += w; }
+      var x = rnd() * W;
+      widths.forEach(function (w) {
+        var px = x % W, f = fills[Math.floor(rnd() * fills.length)], rx = 18 + rnd() * 12;
+        var xs = px + w > W ? [px, px - W] : [px];
+        xs.forEach(function (sx) {
+          var gx = sx + 3, gy = y + 3, gw = w - 6, gh = h - 6;
+          out += '<rect x="' + gx.toFixed(1) + '" y="' + gy.toFixed(1) + '" width="' + gw.toFixed(1) + '" height="' + gh.toFixed(1) + '" rx="' + rx.toFixed(1) + '" fill="' + f + '"/>';
+          out += '<rect x="' + (gx + 4).toFixed(1) + '" y="' + (gy + 3).toFixed(1) + '" width="' + (gw * 0.7).toFixed(1) + '" height="' + (gh * 0.45).toFixed(1) + '" rx="' + (rx * 0.8).toFixed(1) + '" fill="#fff" opacity="' + (0.05 + rnd() * 0.05).toFixed(3) + '"/>';
+          out += '<rect x="' + (gx + gw * 0.25).toFixed(1) + '" y="' + (gy + gh * 0.6).toFixed(1) + '" width="' + (gw * 0.75).toFixed(1) + '" height="' + (gh * 0.4).toFixed(1) + '" rx="' + (rx * 0.8).toFixed(1) + '" fill="#000" opacity="' + (0.12 + rnd() * 0.1).toFixed(3) + '"/>';
+        });
+        x += w;
+      });
+      y += h;
+    }
+    out += '<filter id="g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .4 0"/></filter>';
+    out += '<rect width="' + W + '" height="' + H + '" filter="url(#g)"/></svg>';
+    return 'url("data:image/svg+xml,' + encodeURIComponent(out) + '")';
+  }
+  try { document.documentElement.style.setProperty('--cobble', makeCobble()); } catch (e) { /* fallback: plain ground colour */ }
+
+  /* ====================================================================
+     2. SVG artwork, kept as markup strings
+     ==================================================================== */
+  var DEFS = '<svg width="0" height="0" focusable="false"><defs>' +
+    '<linearGradient id="gBronze" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d492"/><stop offset=".45" stop-color="#c5a059"/><stop offset="1" stop-color="#7a5a26"/></linearGradient>' +
+    '<linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3f4954"/><stop offset=".5" stop-color="#b9c5d1"/><stop offset="1" stop-color="#55616d"/></linearGradient>' +
+    '<linearGradient id="gParch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4e7c2"/><stop offset="1" stop-color="#c3ae7c"/></linearGradient>' +
+    '<linearGradient id="gWood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b4527"/><stop offset="1" stop-color="#2f1b0e"/></linearGradient>' +
+    '<linearGradient id="gShard" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4e55"/><stop offset=".5" stop-color="#1f2126"/><stop offset="1" stop-color="#0f1013"/></linearGradient>' +
+    '<radialGradient id="gGem" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#9a8fb4"/><stop offset=".5" stop-color="#2a2336"/><stop offset="1" stop-color="#0c0a10"/></radialGradient>' +
+    '<radialGradient id="gVoid" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#07040c" stop-opacity=".95"/><stop offset=".62" stop-color="#1a1030" stop-opacity=".7"/><stop offset="1" stop-color="#5a3f86" stop-opacity="0"/></radialGradient>' +
+    '<radialGradient id="gWin" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ffe0a0"/><stop offset="1" stop-color="#ff9a1f"/></radialGradient>' +
+    '</defs></svg>';
+
+  var CORNER = '<svg viewBox="0 0 30 30"><path d="M1 1H29V9H9V29H1Z" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5" cy="5" r="1.8" fill="#2b1810"/><circle cx="19" cy="5" r="1.2" fill="#2b1810" opacity=".7"/><circle cx="5" cy="19" r="1.2" fill="#2b1810" opacity=".7"/></svg>';
+  var COIN = '<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.2"/><circle cx="10" cy="10" r="6" fill="none" stroke="#7a5a26" stroke-width="1"/><path d="M10 6v8M7.5 8.5h5M7.5 11.5h5" stroke="#7a5a26" stroke-width="1" stroke-linecap="round"/></svg>';
+
+  /* --- Excalibur in the stone --- */
+  var EXCALIBUR = '<svg viewBox="0 0 600 600" role="img" aria-label="Меч Эскалибур, вонзённый в огромный серый камень">' +
+    '<defs>' +
+    '<linearGradient id="exBlade" x1="0" x2="1"><stop offset="0" stop-color="#46515c"/><stop offset=".35" stop-color="#8d9aa7"/><stop offset=".5" stop-color="#e3eaf0"/><stop offset=".65" stop-color="#8d9aa7"/><stop offset="1" stop-color="#3d4650"/></linearGradient>' +
+    '<linearGradient id="exStone" x1=".1" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#a3a5a6"/><stop offset=".5" stop-color="#626567"/><stop offset="1" stop-color="#2c2e30"/></linearGradient>' +
+    '<linearGradient id="exShimmer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1cf" stop-opacity="0"/><stop offset=".5" stop-color="#fff1cf" stop-opacity=".95"/><stop offset="1" stop-color="#ffaa33" stop-opacity="0"/></linearGradient>' +
+    '<radialGradient id="exAura" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffaa33" stop-opacity=".4"/><stop offset="1" stop-color="#ffaa33" stop-opacity="0"/></radialGradient>' +
+    '<clipPath id="exBladeClip"><path d="M285 124 L315 124 L312 410 L288 410 Z"/></clipPath>' +
+    '<filter id="exRough" x="-5%" y="-5%" width="110%" height="115%"><feTurbulence type="fractalNoise" baseFrequency=".022 .05" numOctaves="4" seed="11" result="n"/>' +
+    '<feDiffuseLighting in="n" lighting-color="#d9dcdd" surfaceScale="2.4" result="l"><feDistantLight azimuth="230" elevation="58"/></feDiffuseLighting>' +
+    '<feComposite in="l" in2="SourceAlpha" operator="in" result="t"/><feBlend in="t" in2="SourceGraphic" mode="multiply"/></filter>' +
+    '</defs>' +
+    '<ellipse class="aura" cx="300" cy="260" rx="200" ry="240" fill="url(#exAura)"/>' +
+    '<ellipse cx="300" cy="584" rx="276" ry="16" fill="#000" opacity=".5"/>' +
+    // stone
+    '<path d="M38 560 C22 510 40 452 108 430 C170 410 232 420 268 406 C286 400 314 400 332 406 C372 420 440 404 498 432 C560 458 582 516 560 560 C520 596 84 600 38 560Z" fill="url(#exStone)" filter="url(#exRough)"/>' +
+    '<path d="M108 430 C170 410 232 420 268 406 L300 470 L120 484Z" fill="#fff" opacity=".07"/>' +
+    '<path d="M498 432 C560 458 582 516 560 560 L430 522Z" fill="#000" opacity=".26"/>' +
+    '<path d="M38 560 C70 590 200 596 300 592 L120 520Z" fill="#000" opacity=".22"/>' +
+    '<g fill="none" stroke="#141617" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".85"><path d="M150 470 L178 500 L170 540 L196 572"/><path d="M455 450 L430 492 L452 520 L440 560"/><path d="M250 500 L270 530 L246 562"/><path d="M268 416 L242 430"/><path d="M332 416 L360 432"/></g>' +
+    '<path d="M108 430 C170 410 232 420 268 406 C286 400 314 400 332 406 C372 420 440 404 498 432" fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2"/>' +
+    '<path d="M60 522 C80 500 122 498 142 520 C122 536 82 542 60 522Z" fill="#4b5535" opacity=".34"/>' +
+    '<path d="M462 512 C482 496 520 498 538 516 C520 530 482 532 462 512Z" fill="#4b5535" opacity=".3"/>' +
+    // sword
+    '<g class="sword">' +
+    '<circle cx="300" cy="38" r="13" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5"/><circle cx="300" cy="38" r="4.5" fill="#ffaa33"/>' +
+    '<rect x="293" y="50" width="14" height="58" fill="#3b2415"/>' +
+    '<g stroke="#7a5230" stroke-width="1.6"><path d="M293 56 L307 62 M293 66 L307 72 M293 76 L307 82 M293 86 L307 92 M293 96 L307 102"/></g>' +
+    '<rect x="290" y="52" width="20" height="4" fill="url(#gBronze)"/><rect x="290" y="102" width="20" height="4" fill="url(#gBronze)"/>' +
+    '<path d="M285 124 L315 124 L312 410 L288 410 Z" fill="url(#exBlade)"/>' +
+    '<path d="M285.5 124 L288.5 410" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>' +
+    '<rect x="297.5" y="130" width="5" height="262" fill="#1f262d" opacity=".5"/>' +
+    '<g class="runes" fill="none" stroke="#2b3138" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M296 164 v12 M296 168 l8 4 M296 174 l8 -4"/><path d="M304 200 v12 M304 204 l-8 4 M304 211 l-8 -4"/><path d="M296 234 l8 6 l-8 6 M296 234 v12"/><path d="M304 270 l-8 6 l8 6 M304 270 v12"/><path d="M296 304 h8 M300 304 v12 M296 316 h8"/><path d="M296 340 l8 12 M304 340 l-8 12"/><path d="M296 370 v10 h8 v-10"/></g>' +
+    '<g clip-path="url(#exBladeClip)"><rect class="shimmer" x="280" y="128" width="40" height="90" fill="url(#exShimmer)"/></g>' +
+    '<path d="M218 112 Q258 104 300 108 Q342 104 382 112 L378 124 Q340 118 300 121 Q260 118 222 124 Z" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5" stroke-linejoin="round"/>' +
+    '<circle cx="218" cy="118" r="6.5" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.2"/><circle cx="382" cy="118" r="6.5" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.2"/>' +
+    '<ellipse cx="300" cy="115" rx="13" ry="10" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5"/><circle cx="300" cy="115" r="3.5" fill="#ffaa33"/>' +
+    '</g>' +
+    // lip of stone where the blade goes in
+    '<path d="M258 421 C270 405 286 399 300 401 C314 399 330 405 342 421 C320 415 280 415 258 421Z" fill="url(#exStone)" stroke="#15110e" stroke-width="1.5"/>' +
+    '<path d="M268 414 C282 404 318 404 332 414" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1.4"/>' +
+    '</svg>';
+
+  /* --- half-timbered house silhouette --- */
+  var HOUSE = '<svg viewBox="0 0 220 300" aria-hidden="true">' +
+    '<polygon points="14,118 110,26 206,118" fill="#0f0805" stroke="#2b1810" stroke-width="4" stroke-linejoin="round"/>' +
+    '<rect x="26" y="116" width="168" height="184" fill="#1a0f0a"/>' +
+    '<g stroke="#4a2e1b" stroke-width="6" fill="none" stroke-linecap="square"><path d="M26 116V300M110 116V300M194 116V300M26 170H194M26 236H194M26 236L110 170M194 236L110 170M26 300L68 236M194 300L152 236M110 26V116M60 72L110 116M160 72L110 116"/></g>' +
+    '<rect class="win" x="46" y="184" width="40" height="38" fill="url(#gWin)"/><rect class="win w2" x="134" y="184" width="40" height="38" fill="url(#gWin)"/><rect class="win w3" x="94" y="62" width="32" height="36" fill="url(#gWin)"/>' +
+    '<g stroke="#1a0f0a" stroke-width="3"><path d="M66 184V222M46 203H86M154 184V222M134 203H174M110 62V98M94 80H126"/></g>' +
+    '</svg>';
+
+  /* --- artifact illustrations --- */
+  var ICON_FLAIL = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<line x1="26" y1="102" x2="60" y2="62" stroke="#2b1810" stroke-width="9" stroke-linecap="round"/><line x1="25" y1="101" x2="59" y2="61" stroke="#7a5230" stroke-width="2.4" stroke-linecap="round"/>' +
+    '<rect x="53" y="60" width="13" height="6" transform="rotate(-50 60 63)" fill="url(#gBronze)"/><rect x="35" y="85" width="13" height="5" transform="rotate(-50 41 88)" fill="url(#gBronze)"/>' +
+    '<g class="swing" style="transform-origin:62px 58px">' +
+    '<g fill="none" stroke="url(#gSteel)" stroke-width="2.6"><ellipse cx="70" cy="50" rx="6" ry="3.5" transform="rotate(-50 70 50)"/><ellipse cx="77" cy="43" rx="6" ry="3.5" transform="rotate(-50 77 43)"/><ellipse cx="84" cy="36" rx="6" ry="3.5" transform="rotate(-50 84 36)"/></g>' +
+    '<g transform="translate(95 25)"><g fill="url(#gSteel)" stroke="#1d242a" stroke-width="1"><path d="M-3 -12 L0 -22 L3 -12Z"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(45)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(90)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(135)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(180)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(225)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(270)"/><path d="M-3 -12 L0 -22 L3 -12Z" transform="rotate(315)"/></g>' +
+    '<circle r="13" fill="url(#gSteel)" stroke="#1d242a" stroke-width="1.5"/><g fill="none" stroke="#ffaa33" stroke-width="1.5" stroke-linecap="round"><path d="M-6 -3 l5 5 M-1 -3 l-5 5"/><path d="M3 -5 v9 M3 -1 l4 -3"/></g></g>' +
+    '</g></svg>';
+
+  var ICON_RING = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<ellipse cx="60" cy="76" rx="32" ry="28" fill="none" stroke="#14110e" stroke-width="12"/>' +
+    '<ellipse cx="60" cy="76" rx="32" ry="28" fill="none" stroke="url(#gSteel)" stroke-width="8"/>' +
+    '<ellipse cx="60" cy="76" rx="32" ry="28" fill="none" stroke="#eef2f5" stroke-opacity=".4" stroke-width="1.4" transform="translate(-1 -2)"/>' +
+    '<path d="M42 50 L48 36 H72 L78 50 C70 56 50 56 42 50Z" fill="url(#gSteel)" stroke="#2b3138" stroke-width="1.5" stroke-linejoin="round"/>' +
+    '<ellipse cx="60" cy="43" rx="14" ry="8.5" fill="#0c0a10" stroke="#9aa8b5" stroke-width="2"/>' +
+    '<g class="roll"><ellipse cx="60" cy="43" rx="8" ry="5" fill="url(#gGem)"/><ellipse cx="57" cy="41" rx="2.6" ry="1.4" fill="#fff" fill-opacity=".6"/></g>' +
+    '</svg>';
+
+  var ICON_VIAL = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<circle class="halo" cx="60" cy="72" r="46" fill="url(#gVoid)"/>' +
+    '<rect x="51" y="30" width="18" height="20" fill="#9fb0bf" fill-opacity=".22" stroke="#a9b6c2" stroke-width="2"/>' +
+    '<path d="M51 50 C28 62 26 100 60 104 C94 100 92 62 69 50Z" fill="#cfd8e0" fill-opacity=".12" stroke="#a9b6c2" stroke-width="2.4" stroke-linejoin="round"/>' +
+    '<path d="M34 76 C32 94 44 102 60 103 C76 102 88 94 86 76 C74 82 46 70 34 76Z" fill="#100818"/>' +
+    '<g fill="#cfc5e8" fill-opacity=".7"><circle cx="52" cy="88" r="1.3"/><circle cx="66" cy="92" r="1"/><circle cx="72" cy="84" r="1.2"/><circle cx="58" cy="97" r=".9"/></g>' +
+    '<rect x="47" y="14" width="26" height="18" rx="3" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5"/>' +
+    '<rect x="49" y="42" width="22" height="5" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1"/>' +
+    '<path d="M40 64 C36 74 36 84 40 90" stroke="#fff" stroke-opacity=".35" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
+    '</svg>';
+
+  var ICON_QUILL = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<path d="M94 12 C70 18 46 40 34 74 L30 92 L36 92 C52 80 86 60 94 12Z" fill="url(#gParch)" stroke="#7a6a45" stroke-width="1.5" stroke-linejoin="round"/>' +
+    '<g stroke="#8a7a52" stroke-width="1" stroke-linecap="round"><path d="M84 24 L70 28 M78 34 L62 40 M72 44 L56 52 M66 54 L50 64 M58 66 L44 76 M52 74 L40 82"/></g>' +
+    '<path d="M92 14 C76 38 54 66 33 91" stroke="#5a4a2c" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M33 91 L25 106 L37 98Z" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1" stroke-linejoin="round"/>' +
+    '<path class="script" pathLength="100" d="M30 113 C36 105 42 117 48 109 S60 113 66 107 S78 115 86 107 S98 113 106 107" fill="none" stroke="#ffaa33" stroke-width="2" stroke-linecap="round"/>' +
+    '</svg>';
+
+  var ICON_TOME = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<rect x="30" y="16" width="70" height="92" rx="3" fill="#e0d2a6"/><path d="M34 108 H100 M34 105 H100" stroke="#a8955f" stroke-width="1"/>' +
+    '<rect x="24" y="12" width="70" height="92" rx="4" fill="url(#gWood)" stroke="#140b07" stroke-width="2"/>' +
+    '<rect x="24" y="12" width="9" height="92" fill="#2b1810"/><path d="M33 12V104" stroke="#c5a059" stroke-opacity=".5" stroke-width="1"/>' +
+    '<g fill="url(#gBronze)" stroke="#2b1810" stroke-width="1"><path d="M24 12h14v5H29v9h-5z"/><path d="M94 12H80v5h9v9h5z"/><path d="M24 104h14v-5h-9v-9h-5z"/><path d="M94 104H80v-5h9v-9h5z"/></g>' +
+    '<g fill="none" stroke="url(#gBronze)" stroke-width="2.2"><circle cx="62" cy="50" r="24"/><circle cx="62" cy="50" r="20" stroke-width="1"/><ellipse cx="62" cy="50" rx="16" ry="7.5"/><ellipse cx="62" cy="50" rx="16" ry="7.5" transform="rotate(60 62 50)"/><ellipse cx="62" cy="50" rx="16" ry="7.5" transform="rotate(120 62 50)"/></g>' +
+    '<text x="62" y="90" text-anchor="middle" font-family="Alegreya SC, Georgia, serif" font-size="8" fill="#c5a059" letter-spacing="1">MCCCXLVIII</text>' +
+    '<rect x="91" y="46" width="9" height="14" rx="1.5" fill="url(#gSteel)" stroke="#1a2026"/>' +
+    '</svg>';
+
+  var ICON_SHARD = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<g class="twinkle" fill="#e8d8b0"><path d="M18 26 l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><path d="M102 36 l1.5 4.5 4.5 1.5-4.5 1.5-1.5 4.5-1.5-4.5-4.5-1.5 4.5-1.5z"/><path d="M96 92 l1.2 3.6 3.6 1.2-3.6 1.2-1.2 3.6-1.2-3.6-3.6-1.2 3.6-1.2z"/></g>' +
+    '<circle cx="60" cy="14" r="7" fill="none" stroke="url(#gBronze)" stroke-width="4"/><path d="M60 21 V32" stroke="#c5a059" stroke-width="4"/>' +
+    '<path d="M36 44 L52 30 L78 34 L90 54 L84 82 L62 98 L40 86 L32 62Z" fill="url(#gShard)"/>' +
+    '<g stroke="#a9b6c2" stroke-opacity=".6" stroke-width="1"><path d="M40 58 L84 46 M38 70 L88 60 M46 82 L80 70 M52 36 L60 94 M70 36 L50 92"/></g>' +
+    '<path d="M36 44 L52 30 L78 34 L90 54 L84 82 L62 98 L40 86 L32 62Z" fill="none" stroke="url(#gBronze)" stroke-width="3.5" stroke-linejoin="round"/>' +
+    '<g fill="url(#gBronze)" stroke="#2b1810" stroke-width="1"><path d="M29 60 L40 53 L37 70Z"/><path d="M93 52 L82 47 L85 64Z"/><path d="M50 101 L62 96 L68 105Z"/></g>' +
+    '</svg>';
+
+  var GLYPH_SEAL = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="url(#gBronze)" stroke="#2b1810" stroke-width="1.5"/><circle cx="20" cy="20" r="11" fill="none" stroke="#7a5a26" stroke-width="1.5"/><path d="M20 12v16M12 20h16" stroke="#7a5a26" stroke-width="2" stroke-linecap="round"/></svg>';
+  var GLYPH_BUNDLE = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="10" width="26" height="22" rx="2" fill="#6b4527" stroke="#2b1810" stroke-width="1.5"/><path d="M7 21h26M20 10v22" stroke="#c5a059" stroke-width="2"/><path d="M20 10c-4-6-9-4-8 0M20 10c4-6 9-4 8 0" fill="none" stroke="#c5a059" stroke-width="2"/></svg>';
+  var GLYPH_CANDLE = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="15" y="16" width="10" height="20" rx="1.5" fill="#e8d8b0" stroke="#7a6a45" stroke-width="1.2"/><path d="M20 15c-5-5-1-9 0-12 1 3 5 7 0 12z" fill="#ffaa33"/><path d="M11 36h18" stroke="#c5a059" stroke-width="2.5" stroke-linecap="round"/></svg>';
+
+  /* ====================================================================
+     3. Data
+     ==================================================================== */
+  var ARTIFACTS = [
+    { id: 'scourge', lot: 'I', name: 'Бич Ханза', en: "Hanza's Scourge", prov: 'Любек, около 1370 года', price: 640, icon: ICON_FLAIL,
+      desc: 'Древний боевой цеп. Три звена выкованы в год, когда закрылись ганзейские порты, а руны на шипах темнеют перед грозой.' },
+    { id: 'ring', lot: 'II', name: 'Кольцо Шепчущих Теней', en: 'Ring of Whispering Shadows', prov: 'Йорк, со дна колодца', price: 1280, icon: ICON_RING,
+      desc: 'Серебряный обод, а в оправе камень, который сам перекатывается из стороны в сторону. Шёпот слышен только тому, кто стоит в тени.' },
+    { id: 'vial', lot: 'III', name: 'Флакон застывшего молчания', en: 'Vial of Stilled Silence', prov: 'Аббатство Корби, запечатано', price: 390, icon: ICON_VIAL,
+      desc: 'Склянка с тёмным сиянием. Если снять пробку, в комнате перестанут скрипеть половицы и затихнет огонь в очаге.' },
+    { id: 'quill', lot: 'IV', name: 'Перо монаха-еретика', en: "Heretic's Quill", prov: 'Скрипторий Санкт-Галлена', price: 215, icon: ICON_QUILL,
+      desc: 'Пишет без чернил, но не всегда то, что вы задумали. Хранить подальше от писем и долговых расписок.' },
+    { id: 'tome', lot: 'V', name: 'Заколдованный фолиант 1348 года', en: 'Enchanted Tome of 1348', prov: 'Год чумы', price: 2100, icon: ICON_TOME,
+      desc: 'Дубовый переплёт, кельтская вязь по крышке. В ночь на пятницу страницы переворачиваются сами, и каждый раз открывается новая.' },
+    { id: 'shard', lot: 'VI', name: 'Осколок небесного камня', en: 'Sky-stone Shard', prov: 'Поле под Нюрнбергом', price: 870, icon: ICON_SHARD,
+      desc: 'Обломок метеорита, по утрам ещё тёплый на ощупь. Бронзовая оправа удерживает его на месте, пока он остывает.' }
+  ];
+
+  var STATUTE = [
+    { glyph: GLYPH_SEAL, title: 'Откуда вещь', text: 'Каждый предмет мы получили от прежнего владельца или нашли сами. В описи записаны место и год находки.' },
+    { glyph: GLYPH_BUNDLE, title: 'Как мы упаковываем', text: 'Холстина, воск и соломенная подстилка. Фолианты и перья идут отдельно от металла и камня.' },
+    { glyph: GLYPH_CANDLE, title: 'О чём предупреждаем', text: 'Мы продаём вещи, а не последствия. Флакон не открывать при больных, перо не оставлять рядом с письмами.' }
+  ];
+
+  var fmt = function (n) { return n.toLocaleString('ru-RU'); };
+
+  /* ====================================================================
+     4. Components
+     ==================================================================== */
+  function Svg(props) {
+    return html`<div className=${props.className} dangerouslySetInnerHTML=${{ __html: props.markup }} />`;
+  }
+
+  /* rain: a canvas of slanted drops with small splashes at street level */
+  function Rain() {
+    var ref = useRef(null);
+    useEffect(function () {
+      var c = ref.current, ctx = c.getContext('2d');
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var w = 0, h = 0, drops = [], splashes = [], raf = 0, visible = true, slant = 0.22;
+      function make(init) {
+        return { x: Math.random() * (w + h * slant + 40), y: init ? Math.random() * h : -24, l: 10 + Math.random() * 16, v: 13 + Math.random() * 12, a: 0.16 + Math.random() * 0.32 };
+      }
+      function resize() {
+        var r = c.parentElement.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = r.width; h = r.height;
+        c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var n = Math.round(Math.min(280, (w * h) / 5200));
+        drops = []; for (var i = 0; i < n; i++) drops.push(make(true));
+        if (reduce) draw(false);
+      }
+      function draw(step) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.lineWidth = 1.1; ctx.lineCap = 'round';
+        for (var i = 0; i < drops.length; i++) {
+          var d = drops[i];
+          ctx.strokeStyle = 'rgba(205,214,226,' + d.a + ')';
+          ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.l * slant, d.y + d.l); ctx.stroke();
+          if (!step) continue;
+          d.x -= d.v * slant; d.y += d.v;
+          if (d.y > h) {
+            if (Math.random() < 0.16) splashes.push({ x: d.x, y: h - 34 - Math.random() * 26, r: 1, a: 0.5 });
+            drops[i] = make(false);
+          }
+        }
+        for (var j = splashes.length - 1; j >= 0; j--) {
+          var s = splashes[j];
+          ctx.strokeStyle = 'rgba(205,214,226,' + s.a + ')';
+          ctx.beginPath(); ctx.ellipse(s.x, s.y, s.r * 2.2, s.r * 0.8, 0, 0, Math.PI * 2); ctx.stroke();
+          s.r += 0.55; s.a -= 0.035;
+          if (s.a <= 0) splashes.splice(j, 1);
+        }
+      }
+      function loop() { if (visible) draw(true); raf = requestAnimationFrame(loop); }
+      resize();
+      var ro = 'ResizeObserver' in window ? new ResizeObserver(resize) : null;
+      if (ro) ro.observe(c.parentElement); else window.addEventListener('resize', resize);
+      var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }) : null;
+      if (io) io.observe(c);
+      if (!reduce) raf = requestAnimationFrame(loop);
+      return function () { cancelAnimationFrame(raf); if (ro) ro.disconnect(); else window.removeEventListener('resize', resize); if (io) io.disconnect(); };
+    }, []);
+    return html`<canvas ref=${ref} className="rain" aria-hidden="true"></canvas>`;
+  }
+
+  function Clouds() {
+    return html`<div className="clouds" aria-hidden="true"><div className="cloud c1"></div><div className="cloud c2"></div><div className="cloud c3"></div></div>`;
+  }
+
+  /* grey dust that billows from the foot of a block as it lands */
+  function Smoke(props) {
+    var puffs = useMemo(function () {
+      var out = [];
+      for (var i = 0; i < 10; i++) out.push({ x: 5 + Math.random() * 90, s: 60 + Math.random() * 90, dx: (Math.random() - 0.5) * 90, d: props.delay + 320 + Math.random() * 320, t: 1500 + Math.random() * 900 });
+      return out;
+    }, []);
+    return html`<div className="smoke" aria-hidden="true">${puffs.map(function (p, i) {
+      return html`<i key=${i} className="puff" style=${{ '--x': p.x + '%', '--s': p.s + 'px', '--dx': p.dx + 'px', animationDelay: p.d + 'ms', animationDuration: p.t + 'ms' }}></i>`;
+    })}</div>`;
+  }
+
+  /* "Construction" reveal: hidden below the fold, then drops into place with a shake and a dust cloud */
+  function Reveal(props) {
+    var ref = useRef(null);
+    var st = useState('visible'), state = st[0], setState = st[1];
+    var delay = props.delay || 0;
+    useLayoutEffect(function () {
+      var el = ref.current;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!el || reduce || !('IntersectionObserver' in window)) return;
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) return;
+      setState('hidden');
+      var t;
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          io.disconnect();
+          setState('building');
+          t = setTimeout(function () { setState('done'); }, 2800 + delay);
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      io.observe(el);
+      return function () { io.disconnect(); clearTimeout(t); };
+    }, []);
+    var cls = 'rv ' + (props.className || '') + (state === 'hidden' ? ' rv-hidden' : '') + (state === 'building' ? ' rv-build' : '');
+    return html`<div ref=${ref} className=${cls} style=${{ animationDelay: delay + 'ms' }}>${props.children}${state === 'building' && props.smoke !== false ? html`<${Smoke} delay=${delay} />` : null}</div>`;
+  }
+
+  function Nav(props) {
+    var st = useState(false), open = st[0], setOpen = st[1];
+    useEffect(function () {
+      function onKey(e) { if (e.key === 'Escape') setOpen(false); }
+      window.addEventListener('keydown', onKey);
+      return function () { window.removeEventListener('keydown', onKey); };
+    }, []);
+    var total = props.chest.reduce(function (s, a) { return s + a.price; }, 0);
+    return html`<nav className="nav" aria-label="Главное меню">
+      <div className="nav-in g">
+        <a href="#top" className="nav-logo">BeckiePier</a>
+        <div className="nav-links hidden sm:flex">
+          <a href="#collection">Опись</a>
+          <a href="#statute">Устав</a>
+        </div>
+        <button className="chest-btn ml-auto" aria-expanded=${open} aria-controls="chest" onClick=${function () { setOpen(!open); }}>
+          Сундук <b className="count">${props.chest.length}</b>
+        </button>
+      </div>
+      ${open ? html`<div id="chest" className="chest-panel" role="region" aria-label="Сундук">
+        <h2>Ваш сундук</h2>
+        ${props.chest.length === 0
+          ? html`<p className="note">Пока пусто. Выберите вещь в описи и нажмите «Забрать артефакт».</p>`
+          : html`<ul>${props.chest.map(function (a) {
+              return html`<li key=${a.id}><span>${a.name}</span><span>${fmt(a.price)} g.c.</span><button className="rm" onClick=${function () { props.onToggle(a.id); }}>убрать</button></li>`;
+            })}</ul>
+            <div className="total"><span>Итого</span><span>${fmt(total)} g.c.</span></div>
+            <p className="note">Расчёт золотом при встрече на причале.</p>`}
+      </div>` : null}
+    </nav>`;
+  }
+
+  function Hero() {
+    return html`<header className="hero" id="top">
+      <${Clouds} />
+      <${Svg} className="house house-l" markup=${HOUSE} />
+      <${Svg} className="house house-r" markup=${HOUSE} />
+      <div className="hero-inner g">
+        <h1 className="logo">BeckiePier</h1>
+        <p className="tag">ЛАВКА РЕДКИХ, СТРАННЫХ И МАГИЧЕСКИХ ВЕЩЕЙ</p>
+        <p className="sub">Меч в камне мы не продаём. Всё остальное на причале найдётся.</p>
+        <${Svg} className="scene" markup=${EXCALIBUR} />
+        <div className="cta-row">
+          <a className="btn" href="#collection">Войти в лавку</a>
+          <a className="btn ghost" href="#statute">Устав лавки</a>
+        </div>
+      </div>
+      <${Rain} />
+      <div className="hero-beam"></div>
+    </header>`;
+  }
+
+  function ArtifactCard(props) {
+    var a = props.a, inChest = props.inChest;
+    return html`<${Reveal} delay=${(props.index % 3) * 140}>
+      <article className="frame">
+        ${['tl', 'tr', 'bl', 'br'].map(function (p) { return html`<${Svg} key=${p} className=${'corner ' + p} markup=${CORNER} />`; })}
+        <div className="inner">
+          <div className="plate">
+            <span className="lot">Лот ${a.lot}</span>
+            <${Svg} className="icon" markup=${a.icon} />
+          </div>
+          <div className="body">
+            <h3>${a.name}</h3>
+            <p className="en">${a.en}</p>
+            <p className="prov">${a.prov}</p>
+            <p className="desc">${a.desc}</p>
+            <div className="buy">
+              <span className="price"><${Svg} className="coin" markup=${COIN} />${fmt(a.price)} <abbr title="золотых монет">g.c.</abbr></span>
+              <button className="btn" aria-pressed=${inChest} onClick=${function () { props.onToggle(a.id); }}>${inChest ? 'В сундуке' : 'Забрать артефакт'}</button>
+            </div>
+          </div>
+        </div>
+      <//>
+    <//>`;
+  }
+
+  function Collection(props) {
+    return html`<section id="collection" className="g" style=${{ paddingTop: '84px' }}>
+      <div className="wrap">
+        <${Reveal}>
+          <div className="plaque">
+            <h2 className="sec-title">Опись товаров</h2>
+            <p className="sec-sub">Шесть вещей, найденных за этот сезон. Каждая в единственном экземпляре, и ни одна не любит сквозняков.</p>
+          </div>
+        <//>
+        <div className="grid gap-9 mt-14" style=${{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))' }}>
+          ${ARTIFACTS.map(function (a, i) {
+            return html`<${ArtifactCard} key=${a.id} a=${a} index=${i} inChest=${props.ids.indexOf(a.id) !== -1} onToggle=${props.onToggle} />`;
+          })}
+        </div>
+      </div>
+    </section>`;
+  }
+
+  function Statute() {
+    return html`<section id="statute" className="g" style=${{ paddingTop: '96px' }}>
+      <div className="wrap">
+        <${Reveal} smoke=${true}>
+          <div className="wall">
+            <h2 className="sec-title text-center">Устав лавки</h2>
+            <p className="sec-sub text-center">Три правила, которые висят над дверью с тех пор, как у причала поставили первую бочку.</p>
+            <div className="statute grid gap-8 mt-10 md:grid-cols-3">
+              ${STATUTE.map(function (s) {
+                return html`<div key=${s.title}><${Svg} className="glyph" markup=${s.glyph} /><h3>${s.title}</h3><p>${s.text}</p></div>`;
+              })}
+            </div>
+          </div>
+        <//>
+      </div>
+    </section>`;
+  }
+
+  function Torch(props) {
+    return html`<div className=${'torch ' + (props.cls || '')} aria-hidden="true"><div className="torch-glow"></div><div className="flame"></div><div className="torch-cup"></div><div className="torch-stick"></div></div>`;
+  }
+
+  function Footer() {
+    return html`<footer className="foot">
+      <div className="foot-in g">
+        <${Torch} />
+        <div>
+          <p className="foot-name">BeckiePier</p>
+          <p className="foot-lines">
+            <span>Причал у третьего моста, под вывеской с вороном</span>
+            <span>Открыто от первой свечи до третьего колокола</span>
+          </p>
+          <small>Лавка принадлежит причалу, причал принадлежит дождю. 2026</small>
+        </div>
+        <${Torch} cls="t2" />
+      </div>
+    </footer>`;
+  }
+
+  function App() {
+    var st = useState([]), ids = st[0], setIds = st[1];
+    function toggle(id) { setIds(function (s) { return s.indexOf(id) !== -1 ? s.filter(function (x) { return x !== id; }) : s.concat(id); }); }
+    var chest = ARTIFACTS.filter(function (a) { return ids.indexOf(a.id) !== -1; });
+    return html`<${React.Fragment}>
+      <div aria-hidden="true" style=${{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} dangerouslySetInnerHTML=${{ __html: DEFS }}></div>
+      <${Nav} chest=${chest} onToggle=${toggle} />
+      <${Hero} />
+      <main>
+        <${Collection} ids=${ids} onToggle=${toggle} />
+        <${Statute} />
+      </main>
+      <${Footer} />
+    <//>`;
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(html`<${App} />`);
+})();
+</script>
+
+</body></html>
